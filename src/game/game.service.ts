@@ -3,9 +3,6 @@ import { ClientTCP, TcpClientOptions } from '@nestjs/microservices';
 import { Command } from './game.entity';
 import Stack from 'ts-data.stack';
 
-// TODO: add stack of reversed commands,
-// implement restart method with endGame param
-// implenent timer and restart(endGame: true) on timer end
 
 @Injectable()
 export class GameService {
@@ -18,9 +15,9 @@ export class GameService {
 
     private commandStack: Stack<Command> = new Stack();
 
-    // starts connection to robo by TCP
-    // if client is not null - game already started
-    // and method throws an Exception with status code 503 (Service Unavailable)
+    /// starts connection to robo by TCP
+    /// if client is not null - game already started
+    /// and method throws an Exception with status code 503 (Service Unavailable)
     async start() {
         if (this.client){
             throw new HttpException('Already started', 503);
@@ -42,8 +39,8 @@ export class GameService {
         this.commandStack.push(new Command(command.boardTo,command.boardFrom,command.positionTo,command.positionFrom))
     }
 
-    // moves chess pieces into initial positions
-    // if reset.endGame - client setts to null
+    /// moves chess pieces into initial positions
+    /// if reset.endGame - client setts to null
     async reset(endGame: boolean) {
         while (!this.commandStack.isEmpty()){
             this.timer.setTime(this.timeout);
@@ -57,10 +54,10 @@ export class GameService {
         }
     }
 
-    // validates command to robo
-    // there are board 1 or 2
-    // and positions [1..48]
-    // returns boolean
+    /// validates command to robo
+    /// there are board 1 or 2
+    /// and positions [1..48]
+    /// returns boolean
     private validate(command: Command) {
         if (command.boardFrom != 1 && command.boardFrom != 2){
             return false;
